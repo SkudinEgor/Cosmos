@@ -5,12 +5,13 @@ import random as r
 import pygame.freetype as pf
 p.init()
 window = p.display.set_mode((s.WIDTH, s.HEIGHT))
-close = 2
 clock = p.time.Clock()
 
 
 jpgbonusl = p.image.load("assets/PNG/Power-ups/bolt_silver.png")
 jpgship = p.image.load("assets/PNG/playerShip1_blue.png")
+jpgshipred = p.image.load("assets/PNG/playerShip1_red.png")
+jpgshipgreen = p.image.load("assets/PNG/playerShip1_green.png")
 jpgmeteor = p.image.load("assets/PNG/Meteors/meteorBrown_big3.png")
 jpglaser = p.image.load("assets/PNG/Lasers/laserBlue01.png")
 jpgmenu = p.image.load("assets/Backgrounds/blue.png")
@@ -38,7 +39,12 @@ damagelist = []
 for dam in range(1, 4):
     jpgdamage = p.image.load(F"assets/PNG/Damage/playerShip1_damage{dam}.png")
     damagelist.append(jpgdamage)
-spaceship = sp.Ship(2, jpgship, s.WIDTH / 2, s.HEIGHT / 2, damagelist, shieldlist, firelist)
+if s.COLOR == "blue":
+    spaceship = sp.Ship(2, jpgship, s.WIDTH / 2, s.HEIGHT / 2, damagelist, shieldlist, firelist)
+elif s.COLOR == "green":
+    spaceship = sp.Ship(2, jpgshipgreen, s.WIDTH / 2, s.HEIGHT / 2, damagelist, shieldlist, firelist)    
+elif s.COLOR =="red":
+    spaceship = sp.Ship(2, jpgshipred, s.WIDTH / 2, s.HEIGHT / 2, damagelist, shieldlist, firelist)
 button = sp.Button(jpgbutton, 325, 375, "Start the game", 5, 13)
 button2 = sp.Button(jpgbutton2, 975, 375, "Exit", 80, 13 )
 fire = sp.Fire(firelist, spaceship.rect.x + 42, spaceship.rect.y + 75)
@@ -88,11 +94,11 @@ TIMEM =  p.USEREVENT
 p.time.set_timer(TIMEM, 500)
 meteoridlist = []
 
-while 1 + 1 == close:
+while 1 + 1 == s.close:
     event = p.event.get()
     for element in event:
         if element.type == p.QUIT:
-            close = 3
+            s.close = 3
 
         if element.type == p.MOUSEBUTTONDOWN:
             if button.rect.collidepoint(element.pos) == True:
@@ -103,7 +109,7 @@ while 1 + 1 == close:
                 lazerlist.clear()
                 bonuslist.clear()
             if button2.rect.collidepoint(element.pos) == True:
-                close = 3
+                s.close = 3
             
         if element.type == p.KEYDOWN:
             if element.key == p.K_RETURN:
@@ -158,11 +164,16 @@ while 1 + 1 == close:
         text.render_to(window, (100, 60), F"Your score:{spaceship.score}")
         fire.update(0.1)
         fire.draw(window)
+        if s.WELCOME == True:
+            text.render_to(window, (550, 100), F"Hello {s.USERNAME}")
+        else:
+            text.render_to(window, (550, 100), F"Welcome {s.USERNAME}")
     else:
         window.blit(jpgmenu, (0, 0))
         button.draw(window)
         button2.draw(window)
         text2.render_to(window, (450, 10), "Cosmosbattle", (39, 82, 225)) 
+
         
 
 
